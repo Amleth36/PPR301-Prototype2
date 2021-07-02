@@ -91,7 +91,12 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void HandleMovement(float horizontal)
+    {
+        myRigidbody.velocity = new Vector2(horizontal * movementSpeed, myRigidbody.velocity.y);
+    }
+
+    void Update()
     {
         //float horizontal = (Input.GetKey(KeyCode.A)) ? -1f : (Input.GetKey(KeyCode.D)) ? 1f : 0f;
         if (Input.GetKey(KeyCode.A) || (Input.GetKey(KeyCode.D)))
@@ -113,11 +118,31 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("isMoving", false);
         }
         HandleMovement(horizontal);
-    }
 
-    private void HandleMovement(float horizontal)
-    {
-        myRigidbody.velocity = new Vector2(horizontal * movementSpeed, myRigidbody.velocity.y);
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
+            if (hit)
+            {
+                Debug.Log(hit.collider.gameObject.tag);
+                if (itemlock == false)
+                {
+                    if (hit.collider.gameObject.tag == "item")
+                    {
+                        Debug.Log("4");
+                        itemObj = hit.collider.gameObject;
+                        if (Vector2.Distance(itemObj.transform.position, transform.position) < 2.0f)
+                        {
+                            //pick it up
+                            Debug.Log("touch");
+                            StartCoroutine(Pickup());
+                            itemlock = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //void Update()
