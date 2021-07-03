@@ -45,7 +45,7 @@ public class InventoryItemUse : MonoBehaviour
     {
         switch (gameObject.name)   //switch statement to find the item
         {
-            case "CirclePrefab":
+            case "CirclePrefab(Clone)":
                 pc.WhichUseItem("Circle");
                 break;
         }
@@ -65,7 +65,7 @@ public class InventoryItemUse : MonoBehaviour
     {
         switch (gameObject.name)   //switch statement to find the item
         {
-            case "CirclePrefab":
+            case "CirclePrefab(Clone)":
                 InspectText.text = "It's a green testing circle.";
                 break;
         }

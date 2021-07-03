@@ -20,8 +20,9 @@ public class PlayerControl : MonoBehaviour
     public TextMeshProUGUI InspectText;
 
     public Canvas UICanvas;
-    bool itemlock = false;
-    public bool itemUseBool = false;
+    public bool itemlock;
+    public bool itemUseBool;
+    public bool movingToObject;
 
     private float movementSpeed;
     float horizontal;
@@ -35,6 +36,10 @@ public class PlayerControl : MonoBehaviour
         movementSpeed = 5;
         horizontal = 0;
         target = new Vector2(transform.position.x, transform.position.y);
+        itemlock = false;
+        itemUseBool = false;
+        movingToObject = false;
+        InspectText.enabled = false;
 
         anim = GetComponentInChildren<Animator>();
     }
@@ -98,8 +103,9 @@ public class PlayerControl : MonoBehaviour
         myRigidbody.velocity = new Vector2(horizontal * movementSpeed, myRigidbody.velocity.y);
     }
 
-    void ItemCatalogue()
+    IEnumerator ItemCatalogue()
     {
+        anim.SetBool("isUsing", true);
         switch (UseObj.name)   //switch statement to find the prefab of the item's namesake
         {
             case "Green Interactible":
@@ -107,8 +113,10 @@ public class PlayerControl : MonoBehaviour
                 {
                     InspectText.text = "I can combine these two.";
                     StartCoroutine(UseTextEnum());
+                    //Destroy(UseObj); //to destroy the item clicked on
+                    Destroy(GameObject.Find("CirclePrefab(Clone)"));    //storing the object would be more elegant
                     itemUseBool = false;
-                    itemlock = true;
+                    itemlock = false;
                     break;
                 }
                 else
@@ -116,10 +124,12 @@ public class PlayerControl : MonoBehaviour
                     InspectText.text = "That doesn't work with that.";
                     StartCoroutine(UseTextEnum());
                     itemUseBool = false;
-                    itemlock = true;
+                    itemlock = false;
                     break;
                 }
         }
+        yield return new WaitForSeconds(0.5f);
+        anim.SetBool("isUsing", false);
     }
 
     void Update()
@@ -181,20 +191,26 @@ public class PlayerControl : MonoBehaviour
                 //store the location
                 target = new Vector2(mousePos.x, transform.position.y);
 
-                if (UseObj != null)     //On line 166 it detects if you clicked an interactible object and stores that in useObj. Here it goes into that.
+                if (UseObj != null)     //A few lines above it detects if you clicked an interactible object and stores that in useObj. Here it goes into that.
                 {
                     if (itemlock == false)  //lock it from repeatedly entering
                     {
-                        transform.position = Vector2.MoveTowards(transform.position, UseObj.transform.position, Time.deltaTime * 5f);
-                        if (Vector2.Distance(UseObj.transform.position, transform.position) < 1.2f)    //do the thing only when close to the object.
-                        {
-                            Debug.Log("5");
-                            ItemCatalogue();
-                        }
+                        movingToObject = true;
                     }
                 }
                 else
                     itemUseBool = false;
+            }
+        }
+        if (movingToObject)
+        {
+            anim.SetBool("isMoving", true);
+            transform.position = Vector2.MoveTowards(transform.position, new Vector2(UseObj.transform.position.x, transform.position.y), Time.deltaTime * 5f);
+
+            if (Vector2.Distance(UseObj.transform.position, transform.position) < 2.0f)    //do the thing only when close to the object.
+            {
+                movingToObject = false;
+                StartCoroutine(ItemCatalogue());
             }
         }
     }
