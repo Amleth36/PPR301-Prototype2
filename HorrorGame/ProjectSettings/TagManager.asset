@@ -9,6 +9,7 @@ TagManager:
   - Inventory
   - Interactable
   - light
+  - Player Text
   layers:
   - Default
   - TransparentFX

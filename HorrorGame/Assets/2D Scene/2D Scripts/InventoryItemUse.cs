@@ -7,11 +7,12 @@ using TMPro;
 public class InventoryItemUse : MonoBehaviour
 {
     public GameObject Player;
-    private PlayerControl pc;
+    public PlayerControl pc;
     public Button UseButton;
     public Button InspectButton;
     public GameObject panel;
 
+    public GameObject textObj;
     public TextMeshProUGUI InspectText;
 
     bool _active;
@@ -22,8 +23,14 @@ public class InventoryItemUse : MonoBehaviour
         UseButton.enabled = false;
         InspectButton.enabled = false;
         _active = false;
-        InspectText.enabled = false;
-        pc = Player.GetComponent<PlayerControl>();
+        if (Player == null)
+        {
+            Player = GameObject.FindGameObjectWithTag("Player");
+            pc = Player.GetComponent<PlayerControl>();
+            textObj = GameObject.FindGameObjectWithTag("Player Text");
+            InspectText = textObj.GetComponent<TextMeshProUGUI>();
+            InspectText.enabled = false;
+        }
     }
 
     public void ClickOn()
@@ -42,6 +49,11 @@ public class InventoryItemUse : MonoBehaviour
                 pc.WhichUseItem("Circle");
                 break;
         }
+
+        //change cursor to a new 'use' cursor
+        panel.SetActive(false);
+        UseButton.enabled = false;
+        InspectButton.enabled = false;
     }
 
     public void Inspect()
@@ -70,6 +82,13 @@ public class InventoryItemUse : MonoBehaviour
 
     void Update()
     {
+        if (Player == null)
+        {
+            Player = GameObject.FindGameObjectWithTag("Player");
+            pc = Player.GetComponent<PlayerControl>();
+            textObj = GameObject.FindGameObjectWithTag("Player Text");
+            InspectText = textObj.GetComponent<TextMeshProUGUI>();
+        }
         if (_active)
         {
             if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(

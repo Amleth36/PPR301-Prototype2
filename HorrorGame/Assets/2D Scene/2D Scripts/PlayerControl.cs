@@ -41,7 +41,7 @@ public class PlayerControl : MonoBehaviour
 
     IEnumerator Pickup()
     {
-        //play pickup animation
+        anim.SetBool("isPickup", true);
         yield return new WaitForSeconds(0.5f);
 
         switch (itemObj.name)   //switch statement to find the prefab of the item's namesake
@@ -53,12 +53,14 @@ public class PlayerControl : MonoBehaviour
 
         //copy item to inventory
         var pickupItem = Instantiate(prefabItem, ItemSlot1.transform.position, Quaternion.identity);   //need code to determine free item slots
-        pickupItem.transform.SetParent(UICanvas.transform, true);
+        pickupItem.transform.SetParent(UICanvas.transform, false);
+        pickupItem.transform.position = ItemSlot1.transform.position;
 
         //destroy item from world
         Destroy(itemObj);
         itemObj = null;
         itemlock = false;
+        anim.SetBool("isPickup", false);
     }
 
     public void WhichUseItem(string s)
@@ -96,6 +98,30 @@ public class PlayerControl : MonoBehaviour
         myRigidbody.velocity = new Vector2(horizontal * movementSpeed, myRigidbody.velocity.y);
     }
 
+    void ItemCatalogue()
+    {
+        switch (UseObj.name)   //switch statement to find the prefab of the item's namesake
+        {
+            case "Green Interactible":
+                if (storedUseItemRef == "Circle")
+                {
+                    InspectText.text = "I can combine these two.";
+                    StartCoroutine(UseTextEnum());
+                    itemUseBool = false;
+                    itemlock = true;
+                    break;
+                }
+                else
+                {
+                    InspectText.text = "That doesn't work with that.";
+                    StartCoroutine(UseTextEnum());
+                    itemUseBool = false;
+                    itemlock = true;
+                    break;
+                }
+        }
+    }
+
     void Update()
     {
         //float horizontal = (Input.GetKey(KeyCode.A)) ? -1f : (Input.GetKey(KeyCode.D)) ? 1f : 0f;
@@ -125,22 +151,50 @@ public class PlayerControl : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
             if (hit)
             {
-                Debug.Log(hit.collider.gameObject.tag);
                 if (itemlock == false)
                 {
                     if (hit.collider.gameObject.tag == "item")
                     {
-                        Debug.Log("4");
                         itemObj = hit.collider.gameObject;
-                        if (Vector2.Distance(itemObj.transform.position, transform.position) < 2.0f)
+                        if (Vector2.Distance(itemObj.transform.position, transform.position) < 4.0f)
                         {
                             //pick it up
-                            Debug.Log("touch");
                             StartCoroutine(Pickup());
                             itemlock = true;
                         }
                     }
+                    if (hit.collider.gameObject.tag == "Interactable")
+                    {
+                        UseObj = hit.collider.gameObject;   //store the selected world object to use an item on
+                    }
                 }
+            }
+        }
+
+        //move player toward target coords
+        if (itemUseBool)        //you click the use button on an item
+        {                                          
+            if (Input.GetMouseButtonDown(0))    //you click somewhere in the scene
+            {
+                //Getting the coordinates of the mouseposition in game
+                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //store the location
+                target = new Vector2(mousePos.x, transform.position.y);
+
+                if (UseObj != null)     //On line 166 it detects if you clicked an interactible object and stores that in useObj. Here it goes into that.
+                {
+                    if (itemlock == false)  //lock it from repeatedly entering
+                    {
+                        transform.position = Vector2.MoveTowards(transform.position, UseObj.transform.position, Time.deltaTime * 5f);
+                        if (Vector2.Distance(UseObj.transform.position, transform.position) < 1.2f)    //do the thing only when close to the object.
+                        {
+                            Debug.Log("5");
+                            ItemCatalogue();
+                        }
+                    }
+                }
+                else
+                    itemUseBool = false;
             }
         }
     }
