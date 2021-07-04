@@ -9,12 +9,6 @@ public class TempEnemy : MonoBehaviour
     public float rightMost;
     public float leftMost;
 
-
-    void Start()
-    {
-        //transform.Rotate(new Vector3(0, 180, 0));
-    }
-
     void Update()
     {
         if (transform.position.x >= rightMost)
