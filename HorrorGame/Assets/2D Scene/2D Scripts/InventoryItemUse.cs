@@ -72,7 +72,7 @@ public class InventoryItemUse : MonoBehaviour
                 InspectText.text = "It's a green testing circle.";
                 break;
             case "CirclePrefab2(Clone)":
-                InspectText.text = "It's a green testing circle.";
+                InspectText.text = "It's a red testing circle.";
                 break;
         }
         InspectText.enabled = true;

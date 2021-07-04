@@ -147,18 +147,15 @@ public class PlayerControl : MonoBehaviour
                 }
         }
 
-        ItemSlots[2].transform.SetParent(ItemSlots[1], false);
-        ItemSlots[2].transform.position = ItemSlots[1].position;
-
-        //for (int i = 0; i < ItemSlots.Length-1; i++)
-        //{
-        //    if (ItemSlots[i].transform.childCount <= 0 && ItemSlots[i+1].transform.childCount > 0)
-        //    {
-        //        ItemSlots[i+1].transform.SetParent(ItemSlots[i], false);
-        //        ItemSlots[i+1].transform.position = ItemSlots[i].position;
-        //    }
-        //}
-
+        yield return new WaitForSeconds(0.2f);
+        for (int i = 0; i < ItemSlots.Length - 1; i++)
+        {
+            if (ItemSlots[i].transform.childCount <= 0 && ItemSlots[i + 1].transform.childCount > 0)
+            {
+                ItemSlots[i + 1].transform.SetParent(ItemSlots[i], false);
+                ItemSlots[i + 1].transform.position = ItemSlots[i].position;
+            }
+        }
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("isUsing", false);
     }
