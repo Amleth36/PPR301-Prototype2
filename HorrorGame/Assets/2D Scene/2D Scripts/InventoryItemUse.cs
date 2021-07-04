@@ -13,7 +13,7 @@ public class InventoryItemUse : MonoBehaviour
     public GameObject panel;
 
     public GameObject textObj;
-    public TextMeshProUGUI InspectText;
+    //public TextMeshProUGUI InspectText;
 
     bool _active;
 
@@ -28,8 +28,8 @@ public class InventoryItemUse : MonoBehaviour
             Player = GameObject.FindGameObjectWithTag("Player");
             pc = Player.GetComponent<PlayerControl>();
             textObj = GameObject.FindGameObjectWithTag("Player Text");
-            InspectText = textObj.GetComponent<TextMeshProUGUI>();
-            InspectText.enabled = false;
+            //InspectText = textObj.GetComponent<TextMeshProUGUI>();
+            //InspectText.enabled = false;
         }
     }
 
@@ -69,13 +69,13 @@ public class InventoryItemUse : MonoBehaviour
         switch (gameObject.name)   //switch statement to find the item
         {
             case "CirclePrefab(Clone)":
-                InspectText.text = "It's a green testing circle.";
+                pc.InspectText.text = "It's a green testing circle.";
                 break;
             case "CirclePrefab2(Clone)":
-                InspectText.text = "It's a red testing circle.";
+                pc.InspectText.text = "It's a red testing circle.";
                 break;
         }
-        InspectText.enabled = true;
+        pc.InspectText.enabled = true;
         panel.SetActive(false);
         UseButton.enabled = false;
         InspectButton.enabled = false;
@@ -83,7 +83,7 @@ public class InventoryItemUse : MonoBehaviour
 
         yield return new WaitForSeconds(3.0f);
 
-        InspectText.enabled = false;
+        pc.InspectText.enabled = false;
     }
 
     void Update()
@@ -93,7 +93,7 @@ public class InventoryItemUse : MonoBehaviour
             Player = GameObject.FindGameObjectWithTag("Player");
             pc = Player.GetComponent<PlayerControl>();
             textObj = GameObject.FindGameObjectWithTag("Player Text");
-            InspectText = textObj.GetComponent<TextMeshProUGUI>();
+            pc.InspectText = textObj.GetComponent<TextMeshProUGUI>();
         }
         if (_active)
         {

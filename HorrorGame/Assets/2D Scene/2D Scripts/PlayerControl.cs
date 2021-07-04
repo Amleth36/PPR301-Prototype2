@@ -210,7 +210,6 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        //move player toward target coords
         if (itemUseBool)        //you click the use button on an item
         {
             if (Input.GetMouseButtonDown(0))    //you click somewhere in the scene

@@ -13,7 +13,8 @@ public class displayUI : MonoBehaviour
 
     void Start()
     {
-        hoverText.color = Color.clear;
+        if (hoverText != null)
+            hoverText.color = Color.clear;
     }
 
     void Update()
@@ -35,12 +36,16 @@ public class displayUI : MonoBehaviour
     {
         if (displayInfo)
         {
-            hoverText.text = myString;
-            hoverText.color = Color.Lerp(hoverText.color, Color.white, fadeTime * Time.deltaTime);
+            if (hoverText != null)
+            {
+                hoverText.text = myString;
+                hoverText.color = Color.Lerp(hoverText.color, Color.white, fadeTime * Time.deltaTime);
+            }
         }
         else
         {
-            hoverText.color = Color.Lerp(hoverText.color, Color.clear, fadeTime * Time.deltaTime);
+            if (hoverText != null)
+                hoverText.color = Color.Lerp(hoverText.color, Color.clear, fadeTime * Time.deltaTime);
         }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3271285066235734795}
   - component: {fileID: 3271285066235734794}
   - component: {fileID: 3271285066235734789}
+  - component: {fileID: 1475427999}
   m_Layer: 0
   m_Name: Circle
   m_TagString: item
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.7783019, g: 1, b: 0.8004997, a: 1}
   m_FlipX: 0
@@ -93,9 +94,25 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.010753036}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.75807405
+--- !u!114 &1475427999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3271285066235734788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 247e891509f77b9469010c848aff9c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myString: Circle
+  hoverText: {fileID: 0}
+  fadeTime: 10
+  displayInfo: 0
