@@ -133,6 +133,7 @@ public class PlayerControl : MonoBehaviour
                     StartCoroutine(UseTextEnum());
                     //Destroy(UseObj); //to destroy the item clicked on
                     Destroy(GameObject.Find("CirclePrefab(Clone)"));    //storing the object would be more elegant
+                    Destroy(UseObj);
                     itemUseBool = false;
                     itemlock = false;
                     break;
@@ -235,7 +236,7 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("isMoving", true);
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(UseObj.transform.position.x, transform.position.y), Time.deltaTime * 5f);
 
-            if (Vector2.Distance(UseObj.transform.position, transform.position) < 2.0f)    //do the thing only when close to the object.
+            if (Vector2.Distance(UseObj.transform.position, transform.position) < 4.0f)    //do the thing only when close to the object.
             {
                 movingToObject = false;
                 StartCoroutine(ItemCatalogue());
