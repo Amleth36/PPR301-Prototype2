@@ -19,8 +19,8 @@ public class TempEnemy : MonoBehaviour
             
         if (transform.position.x <= leftMost)
         {
-            transform.Rotate(new Vector3(0, 180, 0));
             moveRight = true;
+            transform.Rotate(new Vector3(0, 180, 0));
         }
             
 

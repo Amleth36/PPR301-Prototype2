@@ -11,15 +11,18 @@ public class PlayerControl : MonoBehaviour
     public GameObject itemObj;
     public GameObject UseObj;
 
-    public GameObject ItemSlot1;    //itemslot positions in the inventory (an empty gameobject sits where they are)
+    public Canvas UICanvas;
+    public GameObject ItemSlotParent;
+    public Transform[] ItemSlots;    //itemslot positions in the inventory (an empty gameobject sits where they are)
+    public Transform emptyItemSlot;
 
     private GameObject prefabItem;   //an empty prefab to select them from the switch statement
     public GameObject CircleItem;   //make these images for the inventory screen buttons so you can click and use them
+    public GameObject CircleItem2;   
     private string storedUseItemRef = "";
 
     public TextMeshProUGUI InspectText;
 
-    public Canvas UICanvas;
     public bool itemlock;
     public bool itemUseBool;
     public bool movingToObject;
@@ -41,6 +44,8 @@ public class PlayerControl : MonoBehaviour
         movingToObject = false;
         InspectText.enabled = false;
 
+        ItemSlots = ItemSlotParent.GetComponentsInChildren<Transform>();
+
         anim = GetComponentInChildren<Animator>();
     }
 
@@ -54,12 +59,25 @@ public class PlayerControl : MonoBehaviour
             case "Circle":
                 prefabItem = CircleItem;
                 break;
+            case "Circle2":
+                prefabItem = CircleItem2;
+                break;
         }
 
         //copy item to inventory
-        var pickupItem = Instantiate(prefabItem, ItemSlot1.transform.position, Quaternion.identity);   //need code to determine free item slots
-        pickupItem.transform.SetParent(UICanvas.transform, false);
-        pickupItem.transform.position = ItemSlot1.transform.position;
+        for (int i = 0; i < ItemSlots.Length;)
+        {
+            if (ItemSlots[i].transform.childCount <= 0)
+            {
+                emptyItemSlot = ItemSlots[i];
+                break;
+            }
+            else
+                i++;
+        }
+        var pickupItem = Instantiate(prefabItem, emptyItemSlot.position, Quaternion.identity);   //need code to determine free item slots
+        pickupItem.transform.SetParent(emptyItemSlot, false);
+        pickupItem.transform.position = emptyItemSlot.position;
 
         //destroy item from world
         Destroy(itemObj);
@@ -128,6 +146,19 @@ public class PlayerControl : MonoBehaviour
                     break;
                 }
         }
+
+        ItemSlots[2].transform.SetParent(ItemSlots[1], false);
+        ItemSlots[2].transform.position = ItemSlots[1].position;
+
+        //for (int i = 0; i < ItemSlots.Length-1; i++)
+        //{
+        //    if (ItemSlots[i].transform.childCount <= 0 && ItemSlots[i+1].transform.childCount > 0)
+        //    {
+        //        ItemSlots[i+1].transform.SetParent(ItemSlots[i], false);
+        //        ItemSlots[i+1].transform.position = ItemSlots[i].position;
+        //    }
+        //}
+
         yield return new WaitForSeconds(0.5f);
         anim.SetBool("isUsing", false);
     }
@@ -183,7 +214,7 @@ public class PlayerControl : MonoBehaviour
 
         //move player toward target coords
         if (itemUseBool)        //you click the use button on an item
-        {                                          
+        {
             if (Input.GetMouseButtonDown(0))    //you click somewhere in the scene
             {
                 //Getting the coordinates of the mouseposition in game
