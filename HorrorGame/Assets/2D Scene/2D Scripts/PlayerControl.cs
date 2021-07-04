@@ -6,6 +6,8 @@ using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {
+    private SpriteRenderer mySprite;
+
     private Vector2 target;
     public GameObject doorObj;
     public GameObject itemObj;
@@ -46,12 +48,13 @@ public class PlayerControl : MonoBehaviour
 
         ItemSlots = ItemSlotParent.GetComponentsInChildren<Transform>();
 
+        mySprite = GetComponentInChildren<SpriteRenderer>();
         anim = GetComponentInChildren<Animator>();
     }
 
     IEnumerator Pickup()
     {
-        anim.SetBool("isPickup", true);
+        anim.SetBool("isPickup", true);             //had a pickup animation rigged and working, but it had to be deleted for the new sprite sheet that only had a walk animation
         yield return new WaitForSeconds(0.5f);
 
         switch (itemObj.name)   //switch statement to find the prefab of the item's namesake
@@ -92,7 +95,7 @@ public class PlayerControl : MonoBehaviour
         itemUseBool = true;
     }
 
-    IEnumerator UseTextEnum()
+    IEnumerator UseTextEnum()   //turns the text bubble on above the character's head when they use an item on another item.
     {
         InspectText.enabled = true;
 
@@ -123,13 +126,13 @@ public class PlayerControl : MonoBehaviour
 
     IEnumerator ItemCatalogue()
     {
-        anim.SetBool("isUsing", true);
+        anim.SetBool("isUsing", true);                      //same thing for the animation that played when you used an item on an object. The new sprite from the artists only had a walk animation.
         switch (UseObj.name)   //switch statement to find the prefab of the item's namesake
         {
             case "Green Interactible":
                 if (storedUseItemRef == "Circle")
                 {
-                    InspectText.text = "I can combine these two.";
+                    InspectText.text = "Now that's unlocked.";
                     StartCoroutine(UseTextEnum());
                     //Destroy(UseObj); //to destroy the item clicked on
                     Destroy(GameObject.Find("CirclePrefab(Clone)"));    //storing the object would be more elegant
@@ -169,18 +172,20 @@ public class PlayerControl : MonoBehaviour
             if (Input.GetKey(KeyCode.A))
             {
                 horizontal = -1f;
-                anim.SetBool("isMoving", true);
+                mySprite.flipX = true;
+                anim.SetBool("isWalking", true);
             }
             if (Input.GetKey(KeyCode.D))
             {
                 horizontal = 1f;
-                anim.SetBool("isMoving", true);
+                mySprite.flipX = false;
+                anim.SetBool("isWalking", true);
             }
         }
         else
         {
             horizontal = 0f;
-            anim.SetBool("isMoving", false);
+            anim.SetBool("isWalking", false);       //this would turn on the idle animation, but there isn't one.
         }
         HandleMovement(horizontal);
 
@@ -232,7 +237,7 @@ public class PlayerControl : MonoBehaviour
         }
         if (movingToObject)
         {
-            anim.SetBool("isMoving", true);
+            anim.SetBool("isWalking", true);
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(UseObj.transform.position.x, transform.position.y), Time.deltaTime * 5f);
 
             if (Vector2.Distance(UseObj.transform.position, transform.position) < 4.0f)    //do the thing only when close to the object.
